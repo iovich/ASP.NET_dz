@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebRozetka.Data;
@@ -37,10 +36,15 @@ namespace WebRozetka.Controllers
         public async Task<IActionResult> Create([FromForm] CategoryCreateViewModel model)
         {
             var cat = _mapper.Map<CategoryEntity>(model);
+            //if (cat == null)
+            //{
+             //   return NotFound();
+            //}
             if (model.Image != null)
             {
                 cat.Image = await ImageWorker.SaveImageAsync(model.Image);
             }
+
             await _appEFContext.Categories.AddAsync(cat);
             await _appEFContext.SaveChangesAsync();
             return Ok();
